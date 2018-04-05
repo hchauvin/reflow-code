@@ -1,0 +1,147 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Reflow",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#storage_types"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#storage_types"
+    },
+    {
+      "include": "#number"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.reflow",
+          "match": "\\b(struct|module|keyspace|if|else|requires|type)\\b"
+        },
+        {
+          "name": "keyword.function.reflow",
+          "match": "\\b(func|val)\\b"
+        },
+        {
+          "name": "keyword.param.reflow",
+          "match": "\\b(param|make|exec)\\b"
+        },
+        {
+          "name": "invalid.illegal.keyword.reflow",
+          "comment": "Reserved/illegal keywords",
+          "match": "\\b(force|switch|case|import|include)\\b"
+        },
+        {
+          "name": "support.function.builtin.reflow",
+          "comment": "Built-in functions",
+          "match": "\\b(file|dir|map|list|panic|delay|trace|range|flatten|unzip|zip|len)\\b(?=\\()"
+        },
+        {
+          "name": "constant.language.reflow",
+          "match": "\\b(true|false|MiB|GiB|KiB)"
+        }
+      ]
+    },
+    "storage_types": {
+      "patterns": [
+        {
+          "name": "storage.type.boolean.reflow",
+          "match": "\\bbool\\b"
+        },
+        {
+          "name": "storage.type.numeric.reflow",
+          "match": "\\b(int|float)\\b"
+        },
+        {
+          "name": "storage.type.string.reflow",
+          "match": "\\b(string)\\b"
+        },
+        {
+          "name": "storage.type.file.reflow",
+          "match": "\\b(file|dir)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.reflow",
+      "begin": "\"|'|`",
+      "end": "\"|'|`",
+      "patterns": [
+        {
+          "name": "constant.character.escape.reflow",
+          "match": "\\\\."
+        },
+        {
+          "include": "#expansions"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.reflow",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.reflow"
+            }
+          }
+        },
+        {
+          "name": "comment.line.double-slash.reflow",
+          "begin": "//",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.reflow"
+            }
+          },
+          "end": "$"
+        }
+      ]
+    },
+    "expansions": {
+      "patterns": [
+        {
+          "name": "constant.character.reflow",
+          "begin": "\\{\\{",
+          "end": "\\}\\}",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.expansion.reflow"
+            }
+          }
+        },
+        {
+          "include": "#keywords"
+        }
+      ]
+    },
+    "number": {
+      "name": "constant.numeric.reflow",
+      "patterns": [
+        {
+          "name": "constant.numeric.floating-point.reflow",
+          "comment": "Floating-point literals",
+          "match": "(\\.\\d+([Ee][-+]\\d+)?i?)\\b|\\b\\d+\\.\\d*(([Ee][-+]\\d+)?i?\\b)?"
+        },
+        {
+          "name": "constant.numeric.integer.reflow",
+          "comment": "Integers",
+          "match": "\\b((0x[0-9a-fA-F]+)|(0[0-7]+i?)|(\\d+([Ee]\\d+)?i?)|(\\d+[Ee][-+]\\d+i?))\\b"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.reflow"
+}
