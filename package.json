@@ -1,0 +1,26 @@
+{
+  "name": "reflow",
+  "displayName": "reflow",
+  "description": "Reflow support",
+  "version": "0.1.0",
+  "publisher": "HadrienChauvin",
+  "engines": {
+    "vscode": "^1.21.0"
+  },
+  "categories": [
+    "Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "reflow",
+      "aliases": ["Reflow", "reflow"],
+      "extensions": ["rf"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "reflow",
+      "scopeName": "source.reflow",
+      "path": "./syntaxes/reflow.tmLanguage.json"
+    }]
+  }
+}
