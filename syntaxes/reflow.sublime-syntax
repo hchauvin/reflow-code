@@ -1,0 +1,120 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - rf
+  - reflow
+scope: source.reflow
+
+contexts:
+
+  main:
+    - include: comments
+    - include: keywords
+    - include: storage_types
+    - include: strings
+    - include: storage_types
+    - include: number
+    - include: definitions
+    - include: invocation
+    - include: parameter
+
+  comments:
+    - match: '//'
+      scope: punctuation.definition.comment.reflow
+      push:
+        - meta_scope: comment.line.double-slash.reflow
+        - match: $\n?
+          pop: true
+    - match: '/\*'
+      scope: punctuation.definition.comment.reflow
+      push:
+        - meta_scope: comment.block.reflow
+        - match: '\*/\n?'
+          scope: punctuation.definition.comment.reflow
+          pop: true
+
+  expansions:
+    - match: \{\{
+      scope: punctuation.definition.expansion.reflow
+      push:
+        - meta_scope: constant.character.reflow
+        - match: \}\}
+          pop: true
+          scope: punctuation.definition.expansion.reflow
+        - include: main
+
+  keywords:
+    - scope: keyword.control.reflow
+      match: \b(struct|module|keyspace|if|else|requires|type)\b
+    - scope: keyword.param.reflow
+      match: \b(param|make|exec)\b
+    - comment: Reserved/illegal keywords
+      scope: invalid.illegal.keyword.reflow
+      match: \b(force|switch|case|import|include)\b
+    - comment: Built-in functions
+      scope: support.function.builtin.reflow
+      match: \b(file|dir|map|list|panic|delay|trace|range|flatten|unzip|zip|len)\b(?=\()
+    - scope: constant.language.reflow
+      match: \b(true|false|MiB|GiB|KiB)
+
+  number:
+    - comment: Floating-point literals
+      scope: constant.numeric.floating-point.reflow
+      match: (\.\d+([Ee][-+]\d+)?i?)\b|\b\d+\.\d*(([Ee][-+]\d+)?i?\b)?
+    - comment: Integers
+      scope: constant.numeric.integer.reflow
+      match: \b((0x[0-9a-fA-F]+)|(0[0-7]+i?)|(\d+([Ee]\d+)?i?)|(\d+[Ee][-+]\d+i?))\b
+
+  storage_types:
+    - scope: storage.type.boolean.reflow
+      match: \bbool\b
+    - scope: storage.type.numeric.reflow
+      match: \b(int|float)\b
+    - scope: storage.type.string.reflow
+      match: \b(string)\b
+    - scope: storage.type.file.reflow
+      match: \b(file|dir)\b
+    - scope: storage.type.function.reflow
+      match: \b(func|val)\b
+
+  strings:
+    - match: '"'
+      push:
+        - meta_scope: string.quoted.double.reflow
+        - match: '"'
+          pop: true
+        - scope: constant.character.escape.reflow
+          match: \\.
+        - include: expansions
+    - match: ''''
+      push:
+        - meta_scope: string.quoted.single.reflow
+        - match: ''''
+          pop: true
+        - scope: constant.character.escape.reflow
+          match: \\.
+        - include: expansions
+    - match: '`'
+      push:
+        - meta_scope: string.quoted.other.reflow
+        - match: '`'
+          pop: true
+        - scope: constant.character.escape.reflow
+          match: \\.
+        - include: expansions
+
+  definitions:
+    - match: (?<=func)\s+\b[A-Za-z_][A-Za-z_0-9]*(?=\()
+      scope: entity.name.function.reflow
+      comment: Function definition
+    - match: (?<=val)\s+\b[A-Za-z_][A-Za-z_0-9]*\b
+      scope: variable.other
+      comment: Value definition
+    - match: \b[A-Za-z_][A-Za-z_0-9]*\b(?=\()
+      scope: variable.function.reflow
+      comment: Function invocation
+    - match: \b[A-Za-z_][A-Za-z_0-9]*\s*(?=:\=)
+      scope: variable.language.reflow
+    - match: \b[A-Za-z_][A-Za-z_0-9]*\s*(?=:)
+      scope: variable.parameter.reflow
